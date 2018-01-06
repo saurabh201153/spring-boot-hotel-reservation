@@ -9,7 +9,5 @@ import java.util.List;
  */
 public interface HotelRoomService {
 
-    void createCustomer();
-
-    List<HotelRoom> getHotelRoomListBySize(int size);
+    List<HotelRoom> getHotelRoomBySize(int size);
 }

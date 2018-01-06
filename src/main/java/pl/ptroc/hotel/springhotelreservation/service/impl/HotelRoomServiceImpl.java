@@ -1,9 +1,10 @@
-package pl.ptroc.hotel.springhotelreservation.service;
+package pl.ptroc.hotel.springhotelreservation.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.ptroc.hotel.springhotelreservation.model.HotelRoom;
 import pl.ptroc.hotel.springhotelreservation.repository.HotelRoomRepository;
+import pl.ptroc.hotel.springhotelreservation.service.HotelRoomService;
 
 import java.util.List;
 
@@ -17,12 +18,7 @@ public class HotelRoomServiceImpl implements HotelRoomService {
     private HotelRoomRepository hotelRoomRepository;
 
     @Override
-    public void createCustomer() {
-
-    }
-
-    @Override
-    public List<HotelRoom> getHotelRoomListBySize(int size) {
+    public List<HotelRoom> getHotelRoomBySize(int size) {
         return hotelRoomRepository.findBySize(size);
     }
 }

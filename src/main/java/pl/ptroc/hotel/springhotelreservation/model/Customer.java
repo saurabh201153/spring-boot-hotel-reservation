@@ -10,22 +10,19 @@ import javax.persistence.*;
  * Created by Paweł Troć on 2018-01-06.
  */
 @Entity
-@Table(name = "hotel_room")
+@Table(name = "customer")
 @Getter
 @Setter
 @NoArgsConstructor
-public class HotelRoom {
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "size", nullable = false)
-    private int size;
+    @Column(name = "first_name")
+    private String firstName;
 
-    @Column(name = "room_number", nullable = false, unique = true)
-    private int roomNumber;
-
-    @Column(name = "price")
-    private int price;
+    @Column(name = "last_name")
+    private String lastName;
 }
