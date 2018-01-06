@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface HotelRoomRepository extends JpaRepository<HotelRoom, Long> {
 
-    List<HotelRoom> findBySize(int size);
+    List<HotelRoom> findBySize(Integer size);
 }

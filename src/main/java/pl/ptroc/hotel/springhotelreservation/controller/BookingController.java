@@ -1,13 +1,14 @@
 package pl.ptroc.hotel.springhotelreservation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.*;
+import pl.ptroc.hotel.springhotelreservation.exception.NoAvailableRoomsException;
 import pl.ptroc.hotel.springhotelreservation.model.Booking;
 import pl.ptroc.hotel.springhotelreservation.model.HotelRoom;
+import pl.ptroc.hotel.springhotelreservation.repository.BookingRepository;
+import pl.ptroc.hotel.springhotelreservation.repository.HotelRoomRepository;
 import pl.ptroc.hotel.springhotelreservation.service.BookingService;
-import pl.ptroc.hotel.springhotelreservation.service.HotelRoomService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,9 +22,28 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
 
-    @GetMapping("/getBySize/{roomSize}/{startDate}/{endDate}")
-    public Booking bookHotelRoom(@PathVariable(value = "roomSize") int roomSize, @PathVariable(value
-            = "startDate") LocalDate startDate, @PathVariable(value = "endDate") LocalDate endDate) {
-        return bookingService.bookHotelRoom(roomSize, startDate, endDate);
+    @Autowired
+    private BookingRepository bookingRepository;
+
+    @Autowired
+    private HotelRoomRepository hotelRoomRepository;
+
+    @GetMapping("/bookRoom")
+    @ResponseBody
+    public String bookHotelRoom(@RequestParam(value = "roomSize") int roomSize, @RequestParam(value
+            = "startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate, @RequestParam(value =
+            "endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) throws NoAvailableRoomsException {
+        bookingService.bookHotelRoom(roomSize, startDate, endDate);
+        return "OK";
+    }
+
+    @GetMapping("/getAllBookings")
+    public List<Booking> getAllBookings() {
+        return bookingRepository.findAll();
+    }
+
+    @GetMapping("/getAllRooms")
+    public List<HotelRoom> getAllRooms() {
+        return hotelRoomRepository.findAll();
     }
 }

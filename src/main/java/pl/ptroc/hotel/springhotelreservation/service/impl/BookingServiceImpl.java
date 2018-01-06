@@ -2,6 +2,7 @@ package pl.ptroc.hotel.springhotelreservation.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.ptroc.hotel.springhotelreservation.exception.NoAvailableRoomsException;
 import pl.ptroc.hotel.springhotelreservation.model.Booking;
 import pl.ptroc.hotel.springhotelreservation.model.HotelRoom;
 import pl.ptroc.hotel.springhotelreservation.repository.BookingRepository;
@@ -13,12 +14,15 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by Paweł Troć on 2018-01-06.
  */
 @Service
 public class BookingServiceImpl implements BookingService {
+
+    private Logger logger = Logger.getLogger(BookingServiceImpl.class.getName());
 
     @Autowired
     private HotelRoomService hotelRoomService;
@@ -27,16 +31,19 @@ public class BookingServiceImpl implements BookingService {
     private BookingRepository bookingRepository;
 
     @Override
-    public Booking bookHotelRoom(int roomSize, LocalDate beginDate, LocalDate endDate) {
+    public Booking bookHotelRoom(int roomSize, LocalDate beginDate, LocalDate endDate) throws NoAvailableRoomsException {
         HotelRoom hotelRoom = getHotelRoomForBooking(roomSize, beginDate, endDate);
-        //TODO null-check for hotelRoom
-        Booking booking = new Booking(hotelRoom, null, beginDate, endDate);
+        Booking booking = new Booking();
+        booking.setHotelRoom(hotelRoom);
+        booking.setBeginDate(beginDate);
+        booking.setEndDate(endDate);
         return bookingRepository.save(booking);
     }
 
     @Override
-    public HotelRoom getHotelRoomForBooking(int roomSize, LocalDate beginDate, LocalDate endDate) {
+    public HotelRoom getHotelRoomForBooking(int roomSize, LocalDate beginDate, LocalDate endDate) throws NoAvailableRoomsException {
         List<HotelRoom> hotelRoomList = hotelRoomService.getHotelRoomBySize(roomSize);
+        logger.info(String.format("found %d rooms with size %d", hotelRoomList.size(), roomSize));
         if (!hotelRoomList.isEmpty()) {
             Map<HotelRoom, List<Booking>> bookingsForHotelRoom = new HashMap<>();
 
@@ -51,7 +58,7 @@ public class BookingServiceImpl implements BookingService {
             }
 
         }
-        return null;
+        throw new NoAvailableRoomsException();
     }
 
     private List<Booking> checkIsRoomHasActiveBookings(HotelRoom hotelRoom, LocalDate startDate) {
