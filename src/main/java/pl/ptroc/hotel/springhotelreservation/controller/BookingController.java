@@ -16,17 +16,12 @@ import java.util.List;
 /**
  * Created by Paweł Troć on 2018-01-06.
  */
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class BookingController {
 
     @Autowired
     private BookingService bookingService;
-
-    @Autowired
-    private BookingRepository bookingRepository;
-
-    @Autowired
-    private HotelRoomRepository hotelRoomRepository;
 
     @GetMapping("/bookRoom")
     @ResponseBody
@@ -37,13 +32,16 @@ public class BookingController {
         return "OK";
     }
 
-    @GetMapping("/getAllBookings")
-    public List<Booking> getAllBookings() {
-        return bookingRepository.findAll();
+    @DeleteMapping("/cancelBooking")
+    @ResponseBody
+    public String cancelBooking(@RequestParam(value = "id") Long bookingId) {
+        bookingService.cancelBooking(bookingId);
+        return "OK";
     }
 
-    @GetMapping("/getAllRooms")
-    public List<HotelRoom> getAllRooms() {
-        return hotelRoomRepository.findAll();
+
+    @GetMapping("/getAllBookings")
+    public List<Booking> getAllBookings() {
+        return bookingService.getAllBookings();
     }
 }

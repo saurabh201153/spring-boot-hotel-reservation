@@ -61,6 +61,16 @@ public class BookingServiceImpl implements BookingService {
         throw new NoAvailableRoomsException();
     }
 
+    @Override
+    public List<Booking> getAllBookings() {
+        return bookingRepository.findAll();
+    }
+
+    @Override
+    public void cancelBooking(Long bookingId) {
+        bookingRepository.delete(bookingId);
+    }
+
     private List<Booking> checkIsRoomHasActiveBookings(HotelRoom hotelRoom, LocalDate startDate) {
         return bookingRepository.findByHotelRoomAndEndDateGreaterThanOrderByEndDateAsc(hotelRoom, startDate);
     }

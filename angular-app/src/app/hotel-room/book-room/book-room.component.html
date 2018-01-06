@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <form novalidate [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+        <fieldset>
+
+          <div class="form-group">
+            <label>Wielkość pokoju</label>
+            <input type="text" class="form-control"
+                   formControlName="roomSize">
+          </div>
+
+          <div class="form-group">
+            <label>Od kiedy?</label>
+            <input type="date"
+                   class="form-control"
+                   formControlName="beginDate">
+          </div>
+
+           <div class="form-group">
+            <label>Do kiedy?</label>
+            <input type="date"
+                   class="form-control"
+                   formControlName="endDate">
+          </div>
+
+
+        </fieldset>
+        <button type="submit" class="btn btn-primary">Rezerwuj</button>
+      </form>
+  </div>
+</div>
